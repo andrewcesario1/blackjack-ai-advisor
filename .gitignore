@@ -1,0 +1,19 @@
+# Unity
+/Library/
+/Temp/
+/Obj/
+/Build/
+/Builds/
+/Logs/
+/UserSettings/
+
+# Python virtual env
+/venv/
+/2D Black Jack/Library
+/2D Black Jack/Temp
+/2D Black Jack/Obj
+/2D Black Jack/Build
+/2D Black Jack/Builds
+/2D Black Jack/Logs
+/2D Black Jack/UserSettings
+/Training
