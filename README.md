@@ -1,6 +1,6 @@
-# Blackjack PPO Agent
+# Blackjack AI Advisor
 
-A comprehensive reinforcement learning project that trains a PPO (Proximal Policy Optimization) agent to play blackjack using a fast, feature-based environment, then exports the learned policy as ONNX to drive an in-game "advisor" in Unity. Includes multiple training approaches and complete evaluation tools.
+A reinforcement learning project that trains a PPO (Proximal Policy Optimization) agent to play blackjack using a custom environment, then exports the learned policy as ONNX for Unity integration. Includes multiple training approaches and evaluation tools.
 
 ## Project Structure
 
@@ -35,13 +35,13 @@ blackjack-ai-advisor/
 
 ## Features
 
-- **Custom Blackjack Environment**: Fast, feature-based Gymnasium environment with Hi-Lo counting
-- **Multiple Training Approaches**: PyTorch + PPO (recommended) or Sklearn MLP (simpler)
-- **Complete Training Pipeline**: Automated script runs full training process
-- **Unity Integration**: Trained model exported as ONNX for real-time gameplay
-- **Multiple Strategies**: Includes basic strategy, Hi-Lo counting, and RL-based decisions
-- **Comprehensive Evaluation**: Baseline comparison and policy evaluation tools
-- **Ready-to-Use Models**: Includes pretrained models for immediate testing
+- Custom Blackjack Environment: Fast, feature-based Gymnasium environment with Hi-Lo counting
+- Multiple Training Approaches: PyTorch + PPO (recommended) or Sklearn MLP (simpler)
+- Complete Training Pipeline: Automated script runs full training process
+- Unity Integration: Trained model exported as ONNX for real-time gameplay
+- Multiple Strategies: Includes basic strategy, Hi-Lo counting, and RL-based decisions
+- Comprehensive Evaluation: Baseline comparison and policy evaluation tools
+- Ready-to-Use Models: Includes pretrained models for immediate testing
 
 ## Quick Start
 
@@ -105,29 +105,45 @@ python evaluation/baseline_evaluate.py
 python utils/test_env.py
 ```
 
+## Testing
+
+Run the test suite to verify functionality:
+
+```bash
+cd ai-agent
+python run_tests.py
+```
+
+The tests cover:
+- Blackjack environment functionality
+- Hand value calculations
+- Deck operations
+- Data loading and validation
+- Model file existence
+
 ## Training Approaches
 
 ### PyTorch + PPO (Recommended for Unity)
-- **Behavioral Cloning**: Pretrain on expert strategy data
-- **PPO Fine-tuning**: Reinforcement learning optimization
-- **ONNX Export**: Complete actor network for Unity integration
-- **Result**: `ppo_blackjack_actor.onnx` ready for Unity
+- Behavioral Cloning: Pretrain on expert strategy data
+- PPO Fine-tuning: Reinforcement learning optimization
+- ONNX Export: Complete actor network for Unity integration
+- Result: `ppo_blackjack_actor.onnx` ready for Unity
 
 ### Sklearn MLP (Simpler Alternative)
-- **Direct Training**: Single MLP on expert data
-- **Faster Training**: No reinforcement learning step
-- **Limited Export**: No ONNX support for Unity
-- **Result**: `policy_pretrained.pkl` for analysis only
+- Direct Training: Single MLP on expert data
+- Faster Training: No reinforcement learning step
+- Limited Export: No ONNX support for Unity
+- Result: `policy_pretrained.pkl` for analysis only
 
 ## Technical Details
 
-- **Environment**: Custom blackjack environment with hole card visibility
-- **Algorithm**: PPO with behavioral cloning pretraining
-- **Model**: Neural network actor exported to ONNX format
-- **Features**: Hand value, dealer up card, running count, basic strategy deviation
-- **Integration**: ONNX Runtime for Unity inference
-- **Training Data**: 5,762 expert strategy examples
-- **Model Size**: ~14-dimensional input, 3-dimensional output (Hit/Stand/Double)
+- Environment: Custom blackjack environment with hole card visibility
+- Algorithm: PPO with behavioral cloning pretraining
+- Model: Neural network actor exported to ONNX format
+- Features: Hand value, dealer up card, running count, basic strategy deviation
+- Integration: ONNX Runtime for Unity inference
+- Training Data: 5,762 expert strategy examples
+- Model Size: ~14-dimensional input, 3-dimensional output (Hit/Stand/Double)
 
 ## File Structure Details
 

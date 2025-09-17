@@ -39,13 +39,12 @@ def run_script(script_path, description):
     return True
 
 def main():
-    print("🎯 Blackjack PPO Agent Training Pipeline")
+    print("Blackjack PPO Agent Training Pipeline")
     print("=" * 50)
     
-    # Check if expert data exists
     expert_csv = "models/expert_strategy.csv"
     if not os.path.exists(expert_csv):
-        print(f"❌ Missing required file: {expert_csv}")
+        print(f"Missing required file: {expert_csv}")
         print("Please ensure expert_strategy.csv is in the models/ directory")
         return
     
@@ -56,32 +55,27 @@ def main():
     choice = input("Enter choice (1 or 2): ").strip()
     
     if choice == "2":
-        # Sklearn approach
-        print("\n🚀 Using Sklearn MLP approach")
+        print("\nUsing Sklearn MLP approach")
         if not run_script("training/train.py", "Step 1: Sklearn MLP training"):
             return
-        print("\n🎉 Sklearn training complete!")
+        print("\nSklearn training complete!")
         print("Generated files:")
         print("- models/policy_pretrained.pkl (sklearn model)")
         print("\nNote: This approach doesn't generate ONNX for Unity integration")
         
     else:
-        # PyTorch + PPO approach
-        print("\n🚀 Using PyTorch + PPO approach")
+        print("\nUsing PyTorch + PPO approach")
         
-        # Step 1: Pretrain with expert data
         if not run_script("training/pretrain.py", "Step 1: Pretraining with expert data"):
             return
         
-        # Step 2: Fine-tune with PPO
         if not run_script("training/fast_train_rl.py", "Step 2: PPO fine-tuning"):
             return
         
-        # Step 3: Export to ONNX
         if not run_script("utils/export_onnx.py", "Step 3: Export to ONNX"):
             return
         
-        print("\n🎉 Training pipeline complete!")
+        print("\nTraining pipeline complete!")
         print("Generated files:")
         print("- models/expert_pretrained.pth (pretrained model)")
         print("- ppo_blackjack_finetuned.zip (PPO model)")

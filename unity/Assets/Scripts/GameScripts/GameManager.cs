@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using static HiLoCounter;
 using static IndexStrategy;
@@ -173,12 +170,10 @@ public class GameManager : MonoBehaviour
         // dealer takes all remaining cards—those also get counted in deck.DealCard()
         HitDealer();
         
-        // ▸ RE-ADD the hole-card now that it’s visible
         int holeVal = dealerScript.hand[0]
             .GetComponent<CardScript>()
             .GetValueOfCard();
         UpdateCount(holeVal);
-        Debug.Log("HOLE VALUE: " + holeVal);
 
         // once the hand is over, just display the running count
         advisor.ShowAdvice($"Running count = {RunningCount}");
@@ -219,12 +214,10 @@ public class GameManager : MonoBehaviour
         playerScript.StartHand();
         dealerScript.StartHand();
 
-        // ▸ UNDO the hole‐card’s count so only visible cards remain counted
         int holeVal = dealerScript.hand[0]
             .GetComponent<CardScript>()
             .GetValueOfCard();
         UndoCount(holeVal);
-        Debug.Log("UNDID VALUE: " + RunningCount);
 
         hideCard.GetComponent<Renderer>().enabled = true;
 
@@ -259,7 +252,6 @@ public class GameManager : MonoBehaviour
                 .GetValueOfCard();
             UpdateCount(holeVal);
         }
-        Debug.Log("game finished");
         bool playerBust = playerScript.handValue > 21;
         bool dealerBust = dealerScript.handValue > 21;
         bool player21 = playerScript.handValue == 21;
@@ -335,21 +327,16 @@ public class GameManager : MonoBehaviour
         // canDouble flag
         obs.Add(canDouble ? 1f : 0f);
 
-        Debug.Log("RL features = [" + string.Join(",", obs) + "]");
-
-        // 2) create and run the Barracuda tensor with named I/O
         using var inputTensor = new Tensor(1, obs.Count, obs.ToArray());
         rlWorker.SetInput(rlInputName, inputTensor);
         rlWorker.Execute();
         using var outputTensor = rlWorker.PeekOutput(rlOutputName);
         float[] logits = outputTensor.ToReadOnlyArray();
-        Debug.Log("RL logits    = [" + string.Join(",", logits) + "]");
 
         int   best   = 0;
         for (int i = 1; i < logits.Length; i++)
             if (logits[i] > logits[best]) best = i;
 
-        // 4) clamp to valid range [0,2]
         return Mathf.Clamp(best, 0, 2);
     }
 

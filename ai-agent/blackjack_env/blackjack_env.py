@@ -3,7 +3,6 @@ from gymnasium import spaces
 import numpy as np
 import random
 
-# ─── Simulation core ───
 
 class DeckEngine:
     def __init__(self, num_decks=1):
