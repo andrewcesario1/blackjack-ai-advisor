@@ -1,19 +1,58 @@
-# Unity
-/Library/
-/Temp/
-/Obj/
-/Build/
-/Builds/
-/Logs/
-/UserSettings/
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
 
-# Python virtual env
-/venv/
-/2D Black Jack/Library
-/2D Black Jack/Temp
-/2D Black Jack/Obj
-/2D Black Jack/Build
-/2D Black Jack/Builds
-/2D Black Jack/Logs
-/2D Black Jack/UserSettings
-/Training
+# PyTorch (exclude temporary files, keep pretrained models)
+*.pt
+*.pickle
+# Keep important model files: *.pth, *.pkl, *.onnx
+
+# Environment variables
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Unity
+unity/Library/
+unity/Temp/
+unity/Logs/
+unity/UserSettings/
+unity/obj/
+unity/Build/
+unity/Builds/
+
+# ML Training outputs (keep pretrained models, ignore training outputs)
+*.zip
+*.log
+*.csv.bak
+*.pth.bak
+*.onnx.bak
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Training checkpoints (keep final models, ignore intermediate)
+ai-agent/models/*_checkpoint/
+ai-agent/models/temp/
+ai-agent/models/logs/
