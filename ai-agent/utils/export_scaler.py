@@ -1,7 +1,7 @@
 import torch
 
 # 1) Load checkpoint
-data = torch.load("expert_pretrained.pth", map_location="cpu", weights_only=False)
+data = torch.load("../models/expert_pretrained.pth", map_location="cpu", weights_only=False)
 
 # 2) Pull out the ColumnTransformer
 preprocessor = data["preprocessor"]
