@@ -33,6 +33,35 @@ The RL agent significantly outperforms the baseline strategy, achieving positive
 
 The RL agent shows **significant improvement** over the baseline strategy, achieving positive average reward compared to the baseline's negative performance.
 
+## How the RL Model Generates Profit
+
+### Technical Overview
+
+The RL model achieves profitability through **optimal betting strategy**, not just better win rates:
+
+- **RL Model**: 44.42% win rate, **+0.0071 expected value**
+- **Baseline**: 43.15% win rate, **-0.0136 expected value**
+
+### Key Technical Factors
+
+#### 1. **Strategic Bet Sizing**
+The model learns optimal doubling down decisions based on:
+- Hand value, dealer card, running count, betting opportunity
+- Amplifies profits: Regular win (+$1) vs Doubled win (+$2)
+
+#### 2. **Card Counting Integration**
+**Input Features**: Player hand, running count (Hi-Lo system), dealer card, soft hand flag, can double flag
+
+**Count-Based Strategy**:
+- Positive count → More advantageous plays (stand on 16 vs 10)
+- Negative count → Conservative plays (hit on 16 vs 10)
+- Learns continuous adjustments vs baseline's fixed thresholds
+
+#### 3. **Reinforcement Learning Advantage**
+- **PPO Algorithm**: Learns optimal policy through trial and error
+- **Expected Value Optimization**: Focuses on profit maximization, not just win rate
+- **Context Awareness**: Considers all game state variables simultaneously
+
 ## Project Structure
 
 ```
