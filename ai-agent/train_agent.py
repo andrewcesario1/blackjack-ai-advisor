@@ -48,39 +48,23 @@ def main():
         print("Please ensure expert_strategy.csv is in the models/ directory")
         return
     
-    print("\nChoose training approach:")
-    print("1. PyTorch + PPO (recommended)")
-    print("2. Sklearn MLP (simpler, faster)")
+    print("\nRunning PyTorch + PPO training pipeline...")
     
-    choice = input("Enter choice (1 or 2): ").strip()
+    if not run_script("training/pretrain.py", "Step 1: Pretraining with expert data"):
+        return
     
-    if choice == "2":
-        print("\nUsing Sklearn MLP approach")
-        if not run_script("training/train.py", "Step 1: Sklearn MLP training"):
-            return
-        print("\nSklearn training complete!")
-        print("Generated files:")
-        print("- models/policy_pretrained.pkl (sklearn model)")
-        print("\nNote: This approach doesn't generate ONNX for Unity integration")
-        
-    else:
-        print("\nUsing PyTorch + PPO approach")
-        
-        if not run_script("training/pretrain.py", "Step 1: Pretraining with expert data"):
-            return
-        
-        if not run_script("training/fast_train_rl.py", "Step 2: PPO fine-tuning"):
-            return
-        
-        if not run_script("utils/export_onnx.py", "Step 3: Export to ONNX"):
-            return
-        
-        print("\nTraining pipeline complete!")
-        print("Generated files:")
-        print("- models/expert_pretrained.pth (pretrained model)")
-        print("- ppo_blackjack_finetuned.zip (PPO model)")
-        print("- ppo_blackjack_actor.onnx (Unity-ready model)")
-        print("\nCopy the .onnx file to unity/Assets/Models/ for Unity integration")
+    if not run_script("training/fast_train_rl.py", "Step 2: PPO fine-tuning"):
+        return
+    
+    if not run_script("utils/export_onnx.py", "Step 3: Export to ONNX"):
+        return
+    
+    print("\nTraining pipeline complete!")
+    print("Generated files:")
+    print("- models/expert_pretrained.pth (pretrained model)")
+    print("- models/ppo_blackjack_finetuned.zip (PPO model)")
+    print("- models/ppo_blackjack_actor.onnx (Unity-ready model)")
+    print("\nCopy the .onnx file to unity/Assets/Models/ for Unity integration")
 
 if __name__ == "__main__":
     main()

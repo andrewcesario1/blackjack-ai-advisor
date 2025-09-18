@@ -36,7 +36,7 @@ blackjack-ai-advisor/
 ## Features
 
 - Custom Blackjack Environment: Fast, feature-based Gymnasium environment with Hi-Lo counting
-- Multiple Training Approaches: PyTorch + PPO (recommended) or Sklearn MLP (simpler)
+- PyTorch + PPO Training: Complete reinforcement learning pipeline
 - Complete Training Pipeline: Automated script runs full training process
 - Unity Integration: Trained model exported as ONNX for real-time gameplay
 - Multiple Strategies: Includes basic strategy, Hi-Lo counting, and RL-based decisions
@@ -63,7 +63,7 @@ The `unity/` folder contains a complete Unity project with everything needed to 
 
 ### Training the Agent
 
-#### Option 1: Complete Automated Pipeline (Recommended)
+#### Complete Automated Pipeline
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -71,10 +71,9 @@ pip install -r requirements.txt
 # Run complete training pipeline
 cd ai-agent
 python train_agent.py
-# Choose option 1 (PyTorch + PPO)
 ```
 
-#### Option 2: Manual Step-by-Step
+#### Manual Step-by-Step
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -92,12 +91,6 @@ python ai-agent/utils/export_onnx.py
 cp ppo_blackjack_actor.onnx unity/Assets/Models/
 ```
 
-#### Option 3: Simple Sklearn Approach (No Unity Integration)
-```bash
-cd ai-agent
-python train_agent.py
-# Choose option 2 (Sklearn MLP)
-```
 
 ### Evaluation
 ```bash
@@ -140,11 +133,6 @@ The tests cover:
 - **Step 3**: ONNX export for Unity integration (`export_onnx.py`)
 - **Result**: `models/ppo_blackjack_actor.onnx` ready for Unity
 
-### Sklearn MLP (Simpler Alternative)
-- Direct Training: Single MLP on expert data
-- Faster Training: No reinforcement learning step
-- Limited Export: No ONNX support for Unity
-- Result: `models/policy_pretrained.pkl` for analysis only
 
 ## Performance Results
 
@@ -193,14 +181,12 @@ The RL agent shows **significant improvement** over the baseline strategy, achie
 ### ai-agent/models/
 - `expert_strategy.csv` - Training data (5,762 expert decisions)
 - `expert_pretrained.pth` - PyTorch pretrained model (behavioral cloning)
-- `policy_pretrained.pkl` - Sklearn pretrained model
 - `ppo_blackjack_finetuned.zip` - Complete PPO model (5M steps)
 - `ppo_blackjack_actor.onnx` - Unity-ready ONNX model
 
 ### ai-agent/training/
 - `pretrain.py` - PyTorch behavioral cloning
 - `fast_train_rl.py` - PPO reinforcement learning
-- `train.py` - Sklearn MLP training
 
 ### ai-agent/utils/
 - `export_onnx.py` - Export PPO actor network to ONNX format
