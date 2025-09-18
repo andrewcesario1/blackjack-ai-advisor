@@ -14,7 +14,7 @@ def evaluate(
     model_path: str = "../models/ppo_blackjack_finetuned.zip",
     expert_ckpt: str = "../models/expert_pretrained.pth",
     num_envs: int = 1,
-    num_episodes: int = 500_000,
+    num_episodes: int = 100_000,
     num_decks: int = 1,
 ):
     # 1) Load scaler from expert_pretrained.pth
