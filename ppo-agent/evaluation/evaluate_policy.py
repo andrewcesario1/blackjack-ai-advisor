@@ -1,4 +1,3 @@
-# evaluate_policy.py
 
 import torch
 import numpy as np
@@ -17,24 +16,18 @@ def evaluate(
     num_episodes: int = 100_000,
     num_decks: int = 1,
 ):
-    # 1) Load scaler from expert_pretrained.pth
     ckpt = torch.load(expert_ckpt, map_location="cpu", weights_only=False)
     scaler = ckpt["preprocessor"].named_transformers_["num"]
     num_mean = scaler.mean_.tolist()
     num_std  = scaler.scale_.tolist()
-
-    # 2) Build a single FastObsEnv
     def make_env():
         base = BlackjackEnv(num_decks=num_decks)
         return FastObsEnv(base, num_mean, num_std, up_max=10)
 
     env = make_env()
 
-    # 3) Load trained policy
     model = PPO.load(model_path, device="cpu")
     print(f"✅ Loaded policy from {model_path}")
-
-    # 4) Run episodes
     returns = []
     wins = losses = pushes = 0
 
@@ -56,7 +49,6 @@ def evaluate(
         if (ep+1) % (num_episodes//10) == 0:
             print(f" → Completed {ep+1}/{num_episodes} episodes")
 
-    # 5) Compute and print metrics
     avg_return = np.mean(returns)
     std_return = np.std(returns)
     print("\n🏁 Evaluation results:")

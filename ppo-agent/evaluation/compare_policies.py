@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'training'))
 from blackjack_env import BlackjackEnv
 from fast_train_rl import FastObsEnv
 
-# ─── 1) Deviation helper as you provided ────────────────────────────────────
+# Index deviation helper
 def index_deviation(player_total, is_soft, dealer_up, running_count):
     if is_soft:
         return None
@@ -47,7 +47,7 @@ def index_deviation(player_total, is_soft, dealer_up, running_count):
         return "S"
     return None
 
-# ─── 2) Basic‐strategy tables ──────────────────────────────────────────────
+# Basic strategy tables
 HardTable = [
     ["H"]*10, ["H"]*10, ["H"]*10, ["H"]*10,
     ["H","D","D","D","D","H","H","H","H","H"],
@@ -76,11 +76,9 @@ def basic_strategy_action(obs):
     isSoft      = bool(soft)
     dealerUp    = int(up)  # Ace is 1
     runningCount= int(rc)
-    # 1) index deviation
     dev = index_deviation(playerTotal, isSoft, dealerUp, runningCount)
     if dev is not None:
         return {"H":0,"S":1,"D":2}[dev]
-    # 2) fallback to pure basic
     col = 9 if dealerUp == 1 else dealerUp - 2
     if isSoft:
         row = max(13, min(playerTotal,20)) - 13
@@ -90,7 +88,7 @@ def basic_strategy_action(obs):
         choice = HardTable[row][col]
     return {"H":0,"S":1,"D":2}[choice]
 
-# ─── 3) Evaluation routines ────────────────────────────────────────────────
+# Evaluation routines
 def evaluate_rl(model, env, n):
     rewards = np.zeros(n, dtype=np.float32)
     for i in range(n):
@@ -119,36 +117,29 @@ def evaluate_baseline(env, n):
             print(f"BL: {i+1}/{n}")
     return rewards
 
-# ─── 4) Main & plotting ───────────────────────────────────────────────────
+# Main evaluation and plotting
 def main():
     N = 500_000
 
-    # load scaler
     ckpt = torch.load("../models/expert_pretrained.pth", map_location="cpu", weights_only=False)
     scaler = ckpt["preprocessor"].named_transformers_["num"]
     means = scaler.mean_.astype(np.float32)
     stds  = scaler.scale_.astype(np.float32)
-
-    # RL policy + fast wrapper
     rl = PPO.load("../models/ppo_blackjack_finetuned.zip", map_location="cpu")
     base_env = BlackjackEnv(num_decks=1)
     rl_env   = FastObsEnv(base_env, means, stds, up_max=10)
     print("▶ Evaluating RL policy …")
     rl_rets = evaluate_rl(rl, rl_env, N)
 
-    # Baseline uses raw BlackjackEnv (5‐dim obs)
     bl_env = BlackjackEnv(num_decks=1)
     print("▶ Evaluating Basic+Index baseline …")
     bl_rets = evaluate_baseline(bl_env, N)
-
-    # stats
     for name, arr in [("RL", rl_rets), ("Baseline", bl_rets)]:
         m  = arr.mean()
         se = arr.std(ddof=1)/np.sqrt(N)
         ci = 1.96 * se
         print(f"{name}: EV = {m:.4f} ± {ci:.4f} (95% CI)")
 
-    # plot
     plt.plot(np.cumsum(rl_rets), label="RL")
     plt.plot(np.cumsum(bl_rets), label="Basic+Index")
     plt.xlabel("Hand #"); plt.ylabel("Cumulative Profit")

@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import os
 
-# Add the parent directory to the path to import blackjack_env
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'blackjack_env'))
 from blackjack_env import BlackjackEnv, Hand, DeckEngine
 
@@ -16,16 +15,16 @@ class TestHand(unittest.TestCase):
     
     def test_hand_value_with_ace(self):
         hand = Hand()
-        hand.add(1)  # Ace
+        hand.add(1)
         hand.add(5)
-        self.assertEqual(hand.value, 16)  # Ace counts as 11
+        self.assertEqual(hand.value, 16)
     
     def test_hand_value_multiple_aces(self):
         hand = Hand()
-        hand.add(1)  # Ace
-        hand.add(1)  # Ace
+        hand.add(1)
+        hand.add(1)
         hand.add(9)
-        self.assertEqual(hand.value, 21)  # One ace as 11, one as 1
+        self.assertEqual(hand.value, 21)
     
     def test_hand_bust(self):
         hand = Hand()

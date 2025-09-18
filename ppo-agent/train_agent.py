@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
-"""
-Complete training pipeline for Blackjack PPO Agent
-
-This script runs the full training pipeline:
-1. Pretrain with expert data (behavioral cloning)
-2. Fine-tune with PPO reinforcement learning
-3. Export to ONNX for Unity integration
-
-Usage:
-    python train_agent.py
-
-Make sure you have expert_strategy.csv in the models/ directory.
-"""
+# Training pipeline for Blackjack PPO Agent
 
 import os
 import sys
 import subprocess
 
 def run_script(script_path, description):
-    """Run a Python script and handle errors"""
     print(f"\n{description}")
     print(f"Running: {script_path}")
     

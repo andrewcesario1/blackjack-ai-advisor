@@ -3,10 +3,8 @@ using UnityEngine;
 
 public static class BasicStrategy
 {
-    // “H” = Hit, “S” = Stand, “D” = Double (if allowed), otherwise fallback to Hit
-    // Rows: player total; Columns: dealer up‐card (2–11 for Ace)
+    // H=Hit, S=Stand, D=Double
     private static readonly string[,] HardTable = {
-        //  2   3   4   5   6   7   8   9   10   A
         { "H","H","H","H","H","H","H","H","H","H" }, // 5
         { "H","H","H","H","H","H","H","H","H","H" }, // 6
         { "H","H","H","H","H","H","H","H","H","H" }, // 7
@@ -23,7 +21,6 @@ public static class BasicStrategy
     };
 
     private static readonly string[,] SoftTable = {
-        //   2    3    4    5    6    7    8    9    10    A
         { "H","H","H","D","D","H","H","H","H","H" }, // A,2 (13)
         { "H","H","H","D","D","H","H","H","H","H" }, // A,3 (14)
         { "H","H","D","D","D","H","H","H","H","H" }, // A,4 (15)

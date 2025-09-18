@@ -10,7 +10,6 @@ using Unity.Barracuda;
 
 public class GameManager : MonoBehaviour
 {
-    // btns
     public Button hitBtn;
     public Button standBtn;
     public Button betBtn;
@@ -32,16 +31,15 @@ public class GameManager : MonoBehaviour
     public float   shuffleNoticeDuration = 2f;
 
      [Header("RL Advisor")]
-    public NNModel rlOnnxModel;       // assign your exported ppo_blackjack_finetuned.onnx asset here
+    public NNModel rlOnnxModel;
     private IWorker rlWorker;
     private string rlInputName;
     private string rlOutputName;
     private string[] rlActionNames = { "Hit (RL)", "Stand (RL)", "Double (RL)" };
     [Header("RL Policy Scaler / One-Hot")]
-    // copy these exactly from your Python’s StandardScaler.mean_ / scale_
     public float[] numMean = {12.5f, 2.5f};
     public float[] numStd  = {5.18812747f, 4.60977223f};
-    public int     upMax   = 10; // number of dealer-up one-hot bins
+    public int     upMax   = 10;
 
 
 
@@ -72,7 +70,6 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        // Dispose Barracuda worker when done
         rlWorker?.Dispose();
     }
 
@@ -105,7 +102,6 @@ public class GameManager : MonoBehaviour
         standBtn.gameObject.SetActive(false);
         DblBtn.gameObject.SetActive(false);
 
-        // double your bet and draw one card
         playerScript.UpdateMoney(-numBetAmount);
         numBetAmount *= 2;
         betAmountText.text = numBetAmount.ToString();
@@ -211,7 +207,6 @@ public class GameManager : MonoBehaviour
         if (playerScript.GetBalance() >= numBetAmount)
             DblBtn.gameObject.SetActive(true);
 
-        // deal both cards
         playerScript.StartHand();
         dealerScript.StartHand();
 
@@ -222,23 +217,19 @@ public class GameManager : MonoBehaviour
 
         hideCard.GetComponent<Renderer>().enabled = true;
 
-        // update your UI...
         handText.text       = playerScript.handValue.ToString();
         dealerHandText.text = dealerScript.handValue.ToString();
         betAmountText.text  = numBetAmount.ToString();
         balanceText.text    = playerScript.GetBalance().ToString();
 
-        // show advice + running count
         advisor.ShowAdvice($"{GetAdvice()}; running count = {RunningCount}");
 
-        // check for instant blackjack
         if (playerScript.handValue == 21)
             GameFinished();
     }
 
 
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -314,18 +305,13 @@ public class GameManager : MonoBehaviour
     }
     private int GetRLAction(int playerTotal, bool isSoft, int dealerUp, int runningCount, bool canDouble)
     {
-        // 1) build the feature vector
         var obs = new List<float>(2 + 1 + upMax + 1);
-        // scale numeric features
         float[] nums = new float[] { playerTotal, runningCount };
         for (int i = 0; i < nums.Length; i++)
             obs.Add((nums[i] - numMean[i]) / (numStd[i] + 1e-8f));
-        // isSoft flag
         obs.Add(isSoft ? 1f : 0f);
-        // dealerUp one-hot (map Ace=11 to index 0, or skip it)
         for (int d = 1; d <= upMax; d++)
             obs.Add(d == (dealerUp == 11 ? 1 : dealerUp) ? 1f : 0f);
-        // canDouble flag
         obs.Add(canDouble ? 1f : 0f);
 
         float[] obsArray = obs.ToArray();
@@ -353,7 +339,6 @@ public class GameManager : MonoBehaviour
         bool canDouble = playerScript.cardIndex == 2;
 
         int rlAct = GetRLAction(playerTotal, isSoft, dealerUp, runningCount, canDouble);
-        // clamp illegal double
         if (rlAct == 2 && !canDouble) rlAct = 1;
         return new[] {
             "Advisor: Hit (RL)",
