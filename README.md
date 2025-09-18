@@ -1,67 +1,69 @@
 # Blackjack PPO Agent
 
-A reinforcement learning project that trains a PPO (Proximal Policy Optimization) agent to play blackjack using a custom environment, then exports the learned policy as ONNX for Unity integration. Includes multiple training approaches and evaluation tools.
+A reinforcement learning project that trains a PPO (Proximal Policy Optimization) agent to play blackjack using a custom environment, then exports the learned policy as ONNX for Unity integration.
+
+## Demo
+
+### Demo Video
+[Demo video showing the PPO agent playing blackjack]
+
+### Play Online
+**Try the game yourself**: [Play Blackjack PPO Agent Online](https://play.unity.com/en/games/fde4d8ab-df09-4f48-a1dc-88a185bff4be/blackjack-ai-advisor)
+
+*Note: Go full screen for optimal UI experience*
+
+### Evaluation Results
+
+#### Performance Comparison Graph
+![RL vs Basic+Index Cumulative Profit](docs/RL%20vs%20Basic%20Strategy%20%2B%20Index%20Deviation.PNG)
+
+This graph shows the cumulative profit over 500,000 hands of blackjack:
+- **RL Agent (blue line)**: Consistently profitable, ending at +2,200 profit
+- **Basic+Index Strategy (orange line)**: Consistently losing, ending at -9,000 loss
+
+The RL agent significantly outperforms the baseline strategy, achieving positive returns while the traditional approach incurs losses.
+
+### Performance Results
+
+#### RL Policy Evaluation (5M Steps Training)
+- **Episodes**: 100,000
+- **Average Reward**: 0.0071 ± 0.9811
+- **Win Rate**: 44.42%
+- **Loss Rate**: 46.04%
+- **Push Rate**: 9.54%
+
+![RL Policy Evaluation](docs/RL%20Evaluation.PNG)
+
+#### Baseline Strategy Evaluation
+- **Episodes**: 100,000
+- **Average Reward**: -0.0048 ± 0.9811
+- **Win Rate**: 43.12%
+- **Loss Rate**: 47.68%
+- **Push Rate**: 9.20%
+
+![Baseline Strategy Evaluation](docs/Baseline%20Evaluation.PNG)
+
+The RL agent shows **significant improvement** over the baseline strategy, achieving positive average reward compared to the baseline's negative performance.
 
 ## Project Structure
 
 ```
 blackjack-ppo-agent/
 │
-├── unity/             # Unity game project
-│   ├── Assets/
-│   │   ├── Scripts/
-│   │   │   ├── AIAdvisor/     # AI advisor scripts (Basic Strategy, Hi-Lo Counter, etc.)
-│   │   │   ├── GameScripts/   # Core blackjack game logic
-│   │   │   └── Agents/        # RL agent integration
-│   │   ├── Models/            # Trained ONNX models
-│   │   ├── Scenes/           # Unity scenes
-│   │   ├── Cards/            # Card sprites and textures
-│   │   ├── Chips/            # Chip sprites and UI elements
-│   │   └── TextMesh Pro/     # Text rendering components
-│   ├── ProjectSettings/      # Unity project configuration
-│   ├── Packages/            # Unity package dependencies
-│   └── Library/             # Unity build cache (ignored by git)
+├── unity/             # Unity game project (ready to play)
+│   ├── Assets/Models/ppo_blackjack_actor.onnx  # Trained RL model
+│   ├── Assets/Scripts/                         # Game logic + PPO agent
+│   └── Assets/Scenes/                          # Game scenes
 │
-├── ppo-agent/         # All ML code: env, training, eval, models 
-│   ├── blackjack_env/ # Custom blackjack environment
-│   │   ├── __init__.py
-│   │   └── blackjack_env.py
-│   ├── training/      # PyTorch + PPO training pipeline
-│   │   ├── __init__.py
-│   │   ├── pretrain.py       # Behavioral cloning pretraining
-│   │   └── fast_train_rl.py  # PPO reinforcement learning
-│   ├── evaluation/    # Policy evaluation and comparison
-│   │   ├── __init__.py
-│   │   ├── evaluate_policy.py    # RL policy evaluation
-│   │   ├── baseline_evaluate.py  # Baseline strategy evaluation
-│   │   └── compare_policies.py   # Policy comparison with graphs
-│   ├── models/        # Training data + pretrained models
-│   │   ├── expert_strategy.csv           # Expert training data
-│   │   ├── expert_pretrained.pth        # PyTorch pretrained model
-│   │   ├── ppo_blackjack_finetuned.zip  # Complete PPO model
-│   │   └── ppo_blackjack_actor.onnx     # Unity-ready ONNX model
+├── ppo-agent/         # ML training and evaluation
+│   ├── training/      # PyTorch + PPO pipeline
+│   ├── evaluation/    # Performance evaluation scripts
+│   ├── models/        # Trained models and data
 │   ├── tests/         # Test suite
-│   │   ├── test_blackjack_env.py        # Environment tests
-│   │   └── test_training.py             # Training data tests
-│   ├── utils/         # Export scripts and utilities
-│   │   ├── __init__.py
-│   │   ├── export_onnx.py      # Export PPO model to ONNX
-│   │   ├── export_rl.py        # Alternative export method
-│   │   ├── export_scaler.py    # Extract scaling parameters
-│   │   └── test_env.py         # Environment functionality testing
-│   ├── train_agent.py # Complete training pipeline runner
-│   └── run_tests.py   # Test suite runner
+│   └── utils/         # Export and utility scripts
 │
-├── docs/              # Documentation and evaluation results
-│   ├── TECHNICAL_DETAILS.md
-│   ├── RL Evaluation.PNG
-│   ├── Baseline Evaluation.PNG
-│   └── RL vs Basic Strategy + Index Deviation.PNG
-│
-├── README.md
-├── LICENSE
-├── requirements.txt
-└── .gitignore
+├── docs/              # Documentation and results
+└── requirements.txt
 ```
 
 ## Features
@@ -156,45 +158,6 @@ The tests cover:
 - Data loading and validation
 - Model file existence
 
-## Training Approaches
-
-### PyTorch + PPO (Recommended for Unity)
-- **Step 1**: Behavioral Cloning pretraining on expert strategy data (`pretrain.py`)
-- **Step 2**: PPO fine-tuning with 5M steps (`fast_train_rl.py`)
-- **Step 3**: ONNX export for Unity integration (`export_onnx.py`)
-- **Result**: `models/ppo_blackjack_actor.onnx` ready for Unity
-
-
-## Performance Results
-
-### RL Policy Evaluation (5M Steps Training)
-- **Episodes**: 100,000
-- **Average Reward**: 0.0071 ± 0.9811
-- **Win Rate**: 44.42%
-- **Loss Rate**: 46.04%
-- **Push Rate**: 9.54%
-
-### Baseline Strategy Evaluation
-- **Episodes**: 100,000
-- **Average Reward**: -0.0048 ± 0.9811
-- **Win Rate**: 43.12%
-- **Loss Rate**: 47.68%
-- **Push Rate**: 9.20%
-
-The RL agent shows **significant improvement** over the baseline strategy, achieving positive average reward compared to the baseline's negative performance.
-
-## Evaluation Results
-
-### Performance Comparison Graph
-![RL vs Basic+Index Cumulative Profit](docs/RL%20vs%20Basic%20Strategy%20%2B%20Index%20Deviation.PNG)
-
-### Terminal Output Examples
-
-#### RL Policy Evaluation Results
-![RL Policy Evaluation](docs/RL%20Evaluation.PNG)
-
-#### Baseline Strategy Evaluation Results  
-![Baseline Strategy Evaluation](docs/Baseline%20Evaluation.PNG)
 
 ## Technical Details
 
@@ -245,5 +208,5 @@ The RL agent shows **significant improvement** over the baseline strategy, achie
 
 ## License
 
-This project is for educational and demonstration purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
