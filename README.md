@@ -168,7 +168,7 @@ The tests cover:
 ## Requirements
 
 - Python 3.8+
-- Unity 2022.3+
+- Unity 2022.3.41f1 (required to run the game)
 - See `requirements.txt` for Python dependencies
 
 ## License

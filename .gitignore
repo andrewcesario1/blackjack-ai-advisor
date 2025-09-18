@@ -38,6 +38,7 @@ unity/UserSettings/
 unity/obj/
 unity/Build/
 unity/Builds/
+*.meta
 
 # ML Training outputs (keep pretrained models, ignore training outputs)
 *.zip
@@ -56,3 +57,5 @@ unity/Builds/
 ai-agent/models/*_checkpoint/
 ai-agent/models/temp/
 ai-agent/models/logs/
+unity/.vsconfig
+unity/unity.sln

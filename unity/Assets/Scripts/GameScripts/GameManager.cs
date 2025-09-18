@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -327,7 +328,8 @@ public class GameManager : MonoBehaviour
         // canDouble flag
         obs.Add(canDouble ? 1f : 0f);
 
-        using var inputTensor = new Tensor(1, obs.Count, obs.ToArray());
+        float[] obsArray = obs.ToArray();
+        using var inputTensor = new Tensor(1, obsArray.Length, obsArray);
         rlWorker.SetInput(rlInputName, inputTensor);
         rlWorker.Execute();
         using var outputTensor = rlWorker.PeekOutput(rlOutputName);
