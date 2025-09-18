@@ -5,7 +5,7 @@ A reinforcement learning project that trains a PPO (Proximal Policy Optimization
 ## Demo
 
 ### Demo Video
-[Demo video showing the PPO agent playing blackjack]
+[![Watch the demo](https://img.youtube.com/vi/-0ZrOJTF-t0/0.jpg)](https://www.youtube.com/watch?v=-0ZrOJTF-t0)
 
 ### Play Online
 **Try the game yourself**: [Play Blackjack PPO Agent Online](https://play.unity.com/en/games/fde4d8ab-df09-4f48-a1dc-88a185bff4be/blackjack-ai-advisor)
@@ -26,21 +26,9 @@ The RL agent significantly outperforms the baseline strategy, achieving positive
 ### Performance Results
 
 #### RL Policy Evaluation (5M Steps Training)
-- **Episodes**: 100,000
-- **Average Reward**: 0.0071 ± 0.9811
-- **Win Rate**: 44.42%
-- **Loss Rate**: 46.04%
-- **Push Rate**: 9.54%
-
 ![RL Policy Evaluation](docs/RL%20Evaluation.PNG)
 
 #### Baseline Strategy Evaluation
-- **Episodes**: 100,000
-- **Average Reward**: -0.0048 ± 0.9811
-- **Win Rate**: 43.12%
-- **Loss Rate**: 47.68%
-- **Push Rate**: 9.20%
-
 ![Baseline Strategy Evaluation](docs/Baseline%20Evaluation.PNG)
 
 The RL agent shows **significant improvement** over the baseline strategy, achieving positive average reward compared to the baseline's negative performance.
