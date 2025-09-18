@@ -5,7 +5,7 @@ A reinforcement learning project that trains a PPO (Proximal Policy Optimization
 ## Demo
 
 ### Demo Video
-[Demo video showing the PPO agent playing blackjack]
+[![Watch the demo](https://img.youtube.com/vi/-0ZrOJTF-t0/0.jpg)](https://www.youtube.com/watch?v=-0ZrOJTF-t0)
 
 ### Play Online
 **Try the game yourself**: [Play Blackjack PPO Agent Online](https://play.unity.com/en/games/fde4d8ab-df09-4f48-a1dc-88a185bff4be/blackjack-ai-advisor)
