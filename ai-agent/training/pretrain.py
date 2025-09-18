@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-df = pd.read_csv("expert_strategy.csv")
+df = pd.read_csv("models/expert_strategy.csv")
 
 if 'dealerUp' in df.columns:
     df['dealerUp'] = df['dealerUp'].replace(11, 1.0)
@@ -89,5 +89,5 @@ for epoch in range(1, 101):
 torch.save({
     "preprocessor": preprocessor,
     "model_state":  model.state_dict()
-}, "expert_pretrained.pth")
+}, "models/expert_pretrained.pth")
 print("Saved expert_pretrained.pth with transformer + weights")

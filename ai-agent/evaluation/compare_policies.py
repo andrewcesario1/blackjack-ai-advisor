@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="stable_baselines3")
 from stable_baselines3 import PPO
 import sys
 import os
@@ -122,13 +124,13 @@ def main():
     N = 500_000
 
     # load scaler
-    ckpt = torch.load("expert_pretrained.pth", map_location="cpu", weights_only=False)
+    ckpt = torch.load("../models/expert_pretrained.pth", map_location="cpu", weights_only=False)
     scaler = ckpt["preprocessor"].named_transformers_["num"]
     means = scaler.mean_.astype(np.float32)
     stds  = scaler.scale_.astype(np.float32)
 
     # RL policy + fast wrapper
-    rl = PPO.load("ppo_blackjack_finetuned.zip", map_location="cpu")
+    rl = PPO.load("../models/ppo_blackjack_finetuned.zip", map_location="cpu")
     base_env = BlackjackEnv(num_decks=1)
     rl_env   = FastObsEnv(base_env, means, stds, up_max=10)
     print("▶ Evaluating RL policy …")

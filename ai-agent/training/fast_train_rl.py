@@ -48,7 +48,7 @@ class FastObsEnv(gym.ObservationWrapper):
 def main():
     freeze_support()
 
-    checkpoint = torch.load("expert_pretrained.pth", map_location="cpu", weights_only=False)
+    checkpoint = torch.load("models/expert_pretrained.pth", map_location="cpu", weights_only=False)
     preprocessor = checkpoint["preprocessor"]
     scaler = preprocessor.named_transformers_["num"]
     num_mean = scaler.mean_.tolist()
@@ -84,7 +84,7 @@ def main():
     print(f"Starting RL fine-tuning: {total_steps} timesteps...")
     model.learn(total_timesteps=total_steps)
 
-    outpath = "ppo_blackjack_finetuned"
+    outpath = "models/ppo_blackjack_finetuned.zip"
     model.save(outpath)
     print(f"Training complete; model saved as {outpath}.zip")
 

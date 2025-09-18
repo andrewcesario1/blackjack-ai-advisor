@@ -24,7 +24,7 @@ def run_script(script_path, description):
     
     try:
         result = subprocess.run([sys.executable, script_path], 
-                              cwd=os.path.dirname(script_path),
+                              cwd=os.path.dirname(__file__),
                               check=True, 
                               capture_output=True, 
                               text=True)

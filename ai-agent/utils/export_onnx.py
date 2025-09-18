@@ -2,7 +2,7 @@ import torch
 from stable_baselines3 import PPO
 import torch.nn as nn
 
-model = PPO.load("ppo_blackjack_finetuned.zip", device="cpu")
+model = PPO.load("models/ppo_blackjack_finetuned.zip", device="cpu")
 
 actor = nn.Sequential(
     model.policy.mlp_extractor.policy_net,
@@ -14,7 +14,7 @@ dummy = torch.zeros(1, 14, dtype=torch.float32)
 torch.onnx.export(
     actor,
     dummy,
-    "ppo_blackjack_actor.onnx",
+    "models/ppo_blackjack_actor.onnx",
     input_names  = ["obs"],
     output_names = ["logits"],
     dynamic_axes = {"obs":{0:"batch"}, "logits":{0:"batch"}},
