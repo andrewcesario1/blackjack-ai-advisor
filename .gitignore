@@ -39,6 +39,8 @@ unity/obj/
 unity/Build/
 unity/Builds/
 *.meta
+*.sln
+*.csproj
 
 # ML Training outputs (keep pretrained models, ignore training outputs)
 *.zip

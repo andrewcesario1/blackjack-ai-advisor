@@ -1,11 +1,11 @@
-# Blackjack AI Advisor
+# Blackjack PPO Agent
 
 A reinforcement learning project that trains a PPO (Proximal Policy Optimization) agent to play blackjack using a custom environment, then exports the learned policy as ONNX for Unity integration. Includes multiple training approaches and evaluation tools.
 
 ## Project Structure
 
 ```
-blackjack-ai-advisor/
+blackjack-ppo-agent/
 │
 ├── unity/             # Unity game project
 │   ├── Assets/
@@ -15,22 +15,53 @@ blackjack-ai-advisor/
 │   │   │   └── Agents/        # RL agent integration
 │   │   ├── Models/            # Trained ONNX models
 │   │   ├── Scenes/           # Unity scenes
-│   │   └── ...
-│   ├── ProjectSettings/
-│   └── Packages/
+│   │   ├── Cards/            # Card sprites and textures
+│   │   ├── Chips/            # Chip sprites and UI elements
+│   │   └── TextMesh Pro/     # Text rendering components
+│   ├── ProjectSettings/      # Unity project configuration
+│   ├── Packages/            # Unity package dependencies
+│   └── Library/             # Unity build cache (ignored by git)
 │
-├── ai-agent/          # All ML code: env, training, eval, models 
+├── ppo-agent/         # All ML code: env, training, eval, models 
 │   ├── blackjack_env/ # Custom blackjack environment
-│   ├── training/      # Multiple training approaches (PyTorch + Sklearn)
+│   │   ├── __init__.py
+│   │   └── blackjack_env.py
+│   ├── training/      # PyTorch + PPO training pipeline
+│   │   ├── __init__.py
+│   │   ├── pretrain.py       # Behavioral cloning pretraining
+│   │   └── fast_train_rl.py  # PPO reinforcement learning
 │   ├── evaluation/    # Policy evaluation and comparison
+│   │   ├── __init__.py
+│   │   ├── evaluate_policy.py    # RL policy evaluation
+│   │   ├── baseline_evaluate.py  # Baseline strategy evaluation
+│   │   └── compare_policies.py   # Policy comparison with graphs
 │   ├── models/        # Training data + pretrained models
+│   │   ├── expert_strategy.csv           # Expert training data
+│   │   ├── expert_pretrained.pth        # PyTorch pretrained model
+│   │   ├── ppo_blackjack_finetuned.zip  # Complete PPO model
+│   │   └── ppo_blackjack_actor.onnx     # Unity-ready ONNX model
+│   ├── tests/         # Test suite
+│   │   ├── test_blackjack_env.py        # Environment tests
+│   │   └── test_training.py             # Training data tests
 │   ├── utils/         # Export scripts and utilities
-│   └── train_agent.py # Complete training pipeline runner
+│   │   ├── __init__.py
+│   │   ├── export_onnx.py      # Export PPO model to ONNX
+│   │   ├── export_rl.py        # Alternative export method
+│   │   ├── export_scaler.py    # Extract scaling parameters
+│   │   └── test_env.py         # Environment functionality testing
+│   ├── train_agent.py # Complete training pipeline runner
+│   └── run_tests.py   # Test suite runner
 │
-├── docs/              # Documentation
+├── docs/              # Documentation and evaluation results
+│   ├── TECHNICAL_DETAILS.md
+│   ├── RL Evaluation.PNG
+│   ├── Baseline Evaluation.PNG
+│   └── RL vs Basic Strategy + Index Deviation.PNG
+│
 ├── README.md
 ├── LICENSE
-└── requirements.txt
+├── requirements.txt
+└── .gitignore
 ```
 
 ## Features
@@ -49,19 +80,19 @@ blackjack-ai-advisor/
 The `unity/` folder contains a complete Unity project with everything needed to run the blackjack game:
 
 - **Trained Model**: `unity/Assets/Models/ppo_blackjack_actor.onnx` - Pre-trained RL model ready for testing
-- **Game Scripts**: Complete blackjack game logic with AI integration
-- **AI Advisor System**: Real-time decision recommendations using the trained model
+- **Game Scripts**: Complete blackjack game logic with PPO agent integration
+- **PPO Agent System**: Real-time decision recommendations using the trained model
 - **UI Components**: Cards, chips, and game interface
 - **Scenes**: Ready-to-play game scenes
 
 **To run the game:**
 1. Open Unity and import the `unity/` folder as a new project
-2. Open the "Game Scene" to play blackjack with AI advisor
-3. The AI advisor provides real-time recommendations based on the trained PPO model
+2. Open the "Game Scene" to play blackjack with PPO agent
+3. The PPO agent provides real-time recommendations based on the trained model
 
 *Note: The model in Unity is for testing purposes. The training process below can be used to retrain or modify the model.*
 
-### Training the Agent
+### Training the PPO Agent
 
 #### Complete Automated Pipeline
 ```bash
@@ -69,7 +100,7 @@ The `unity/` folder contains a complete Unity project with everything needed to 
 pip install -r requirements.txt
 
 # Run complete training pipeline
-cd ai-agent
+cd ppo-agent
 python train_agent.py
 ```
 
@@ -79,13 +110,13 @@ python train_agent.py
 pip install -r requirements.txt
 
 # Step 1: Pretrain with expert data
-python ai-agent/training/pretrain.py
+python ppo-agent/training/pretrain.py
 
 # Step 2: Fine-tune with PPO
-python ai-agent/training/fast_train_rl.py
+python ppo-agent/training/fast_train_rl.py
 
 # Step 3: Export to ONNX
-python ai-agent/utils/export_onnx.py
+python ppo-agent/utils/export_onnx.py
 
 # Copy the ONNX model to Unity
 cp ppo_blackjack_actor.onnx unity/Assets/Models/
@@ -94,12 +125,12 @@ cp ppo_blackjack_actor.onnx unity/Assets/Models/
 
 ### Evaluation
 ```bash
-cd ai-agent
+cd ppo-agent
 
 # Compare different strategies (RL vs Basic Strategy vs Index Strategy)
 python evaluation/compare_policies.py
 
-# Evaluate RL policy performance
+# Evaluate PPO agent performance
 python evaluation/evaluate_policy.py
 
 # Run baseline evaluation (Basic Strategy only)
@@ -114,7 +145,7 @@ python utils/test_env.py
 Run the test suite to verify functionality:
 
 ```bash
-cd ai-agent
+cd ppo-agent
 python run_tests.py
 ```
 
@@ -178,17 +209,17 @@ The RL agent shows **significant improvement** over the baseline strategy, achie
 
 ## File Structure Details
 
-### ai-agent/models/
+### ppo-agent/models/
 - `expert_strategy.csv` - Training data (5,762 expert decisions)
 - `expert_pretrained.pth` - PyTorch pretrained model (behavioral cloning)
 - `ppo_blackjack_finetuned.zip` - Complete PPO model (5M steps)
 - `ppo_blackjack_actor.onnx` - Unity-ready ONNX model
 
-### ai-agent/training/
+### ppo-agent/training/
 - `pretrain.py` - PyTorch behavioral cloning
 - `fast_train_rl.py` - PPO reinforcement learning
 
-### ai-agent/utils/
+### ppo-agent/utils/
 - `export_onnx.py` - Export PPO actor network to ONNX format
 - `export_rl.py` - Alternative export method
 - `export_scaler.py` - Extract and display scaling parameters
